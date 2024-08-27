@@ -1,0 +1,403 @@
+# This AWS SAM template has been generated from your function's configuration. If
+# your function has one or more triggers, note that the AWS resources associated
+# with these triggers aren't fully specified in this template and include
+# placeholder values. Open this template in AWS Application Composer or your
+# favorite IDE and modify it to specify a serverless application with other AWS
+# resources.
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model template describing your function.
+Resources:
+  pipelineextractionlogs:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Description: ''
+      MemorySize: 128
+      Timeout: 3
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      EphemeralStorage:
+        Size: 512
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      PackageType: Zip
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+              Resource: arn:aws:logs:us-west-2:913524913171:*
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource:
+                - >-
+                  arn:aws:logs:us-west-2:913524913171:log-group:/aws/lambda/pipeline-extraction-logs:*
+            - Effect: Allow
+              Action:
+                - glue:*
+                - s3:GetBucketLocation
+                - s3:ListBucket
+                - s3:ListAllMyBuckets
+                - s3:GetBucketAcl
+                - ec2:DescribeVpcEndpoints
+                - ec2:DescribeRouteTables
+                - ec2:CreateNetworkInterface
+                - ec2:DeleteNetworkInterface
+                - ec2:DescribeNetworkInterfaces
+                - ec2:DescribeSecurityGroups
+                - ec2:DescribeSubnets
+                - ec2:DescribeVpcAttribute
+                - iam:ListRolePolicies
+                - iam:GetRole
+                - iam:GetRolePolicy
+                - cloudwatch:PutMetricData
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - s3:CreateBucket
+              Resource:
+                - arn:aws:s3:::aws-glue-*
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+              Resource:
+                - arn:aws:s3:::aws-glue-*/*
+                - arn:aws:s3:::*/*aws-glue-*/*
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - arn:aws:s3:::crawler-public*
+                - arn:aws:s3:::aws-glue-*
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource:
+                - arn:aws:logs:*:*:*:/aws-glue/*
+            - Effect: Allow
+              Action:
+                - ec2:CreateTags
+                - ec2:DeleteTags
+              Condition:
+                ForAllValues:StringEquals:
+                  aws:TagKeys:
+                    - aws-glue-service-resource
+              Resource:
+                - arn:aws:ec2:*:*:network-interface/*
+                - arn:aws:ec2:*:*:security-group/*
+                - arn:aws:ec2:*:*:instance/*
+            - Sid: BaseAppPermissions
+              Effect: Allow
+              Action:
+                - glue:*
+                - redshift:DescribeClusters
+                - redshift:DescribeClusterSubnetGroups
+                - iam:ListRoles
+                - iam:ListUsers
+                - iam:ListGroups
+                - iam:ListRolePolicies
+                - iam:GetRole
+                - iam:GetRolePolicy
+                - iam:ListAttachedRolePolicies
+                - ec2:DescribeSecurityGroups
+                - ec2:DescribeSubnets
+                - ec2:DescribeVpcs
+                - ec2:DescribeVpcEndpoints
+                - ec2:DescribeRouteTables
+                - ec2:DescribeVpcAttribute
+                - ec2:DescribeKeyPairs
+                - ec2:DescribeInstances
+                - ec2:DescribeImages
+                - rds:DescribeDBInstances
+                - rds:DescribeDBClusters
+                - rds:DescribeDBSubnetGroups
+                - s3:ListAllMyBuckets
+                - s3:ListBucket
+                - s3:GetBucketAcl
+                - s3:GetBucketLocation
+                - cloudformation:ListStacks
+                - cloudformation:DescribeStacks
+                - cloudformation:GetTemplateSummary
+                - dynamodb:ListTables
+                - kms:ListAliases
+                - kms:DescribeKey
+                - cloudwatch:GetMetricData
+                - cloudwatch:ListDashboards
+                - databrew:ListRecipes
+                - databrew:ListRecipeVersions
+                - databrew:DescribeRecipe
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource:
+                - arn:aws:s3:::aws-glue-*/*
+                - arn:aws:s3:::*/*aws-glue-*/*
+                - arn:aws:s3:::aws-glue-*
+            - Effect: Allow
+              Action:
+                - tag:GetResources
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - s3:CreateBucket
+              Resource:
+                - arn:aws:s3:::aws-glue-*
+            - Effect: Allow
+              Action:
+                - logs:GetLogEvents
+              Resource:
+                - arn:aws:logs:*:*:/aws-glue/*
+            - Effect: Allow
+              Action:
+                - cloudformation:CreateStack
+                - cloudformation:DeleteStack
+              Resource: arn:aws:cloudformation:*:*:stack/aws-glue*/*
+            - Effect: Allow
+              Action:
+                - ec2:RunInstances
+              Resource:
+                - arn:aws:ec2:*:*:instance/*
+                - arn:aws:ec2:*:*:key-pair/*
+                - arn:aws:ec2:*:*:image/*
+                - arn:aws:ec2:*:*:security-group/*
+                - arn:aws:ec2:*:*:network-interface/*
+                - arn:aws:ec2:*:*:subnet/*
+                - arn:aws:ec2:*:*:volume/*
+            - Effect: Allow
+              Action:
+                - ec2:TerminateInstances
+                - ec2:CreateTags
+                - ec2:DeleteTags
+              Resource:
+                - arn:aws:ec2:*:*:instance/*
+              Condition:
+                StringLike:
+                  ec2:ResourceTag/aws:cloudformation:stack-id: arn:aws:cloudformation:*:*:stack/aws-glue-*/*
+                StringEquals:
+                  ec2:ResourceTag/aws:cloudformation:logical-id: ZeppelinInstance
+            - Action:
+                - iam:PassRole
+              Effect: Allow
+              Resource: arn:aws:iam::*:role/AWSGlueServiceRole*
+              Condition:
+                StringLike:
+                  iam:PassedToService:
+                    - glue.amazonaws.com
+            - Action:
+                - iam:PassRole
+              Effect: Allow
+              Resource: arn:aws:iam::*:role/AWSGlueServiceNotebookRole*
+              Condition:
+                StringLike:
+                  iam:PassedToService:
+                    - ec2.amazonaws.com
+            - Action:
+                - iam:PassRole
+              Effect: Allow
+              Resource:
+                - arn:aws:iam::*:role/service-role/AWSGlueServiceRole*
+              Condition:
+                StringLike:
+                  iam:PassedToService:
+                    - glue.amazonaws.com
+            - Sid: BaseAthenaPermissions
+              Effect: Allow
+              Action:
+                - athena:*
+              Resource:
+                - '*'
+            - Sid: BaseGluePermissions
+              Effect: Allow
+              Action:
+                - glue:CreateDatabase
+                - glue:DeleteDatabase
+                - glue:GetDatabase
+                - glue:GetDatabases
+                - glue:UpdateDatabase
+                - glue:CreateTable
+                - glue:DeleteTable
+                - glue:BatchDeleteTable
+                - glue:UpdateTable
+                - glue:GetTable
+                - glue:GetTables
+                - glue:BatchCreatePartition
+                - glue:CreatePartition
+                - glue:DeletePartition
+                - glue:BatchDeletePartition
+                - glue:UpdatePartition
+                - glue:GetPartition
+                - glue:GetPartitions
+                - glue:BatchGetPartition
+                - glue:StartColumnStatisticsTaskRun
+                - glue:GetColumnStatisticsTaskRun
+                - glue:GetColumnStatisticsTaskRuns
+                - glue:GetCatalogImportStatus
+              Resource:
+                - '*'
+            - Sid: BaseQueryResultsPermissions
+              Effect: Allow
+              Action:
+                - s3:GetBucketLocation
+                - s3:GetObject
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:CreateBucket
+                - s3:PutObject
+                - s3:PutBucketPublicAccessBlock
+              Resource:
+                - arn:aws:s3:::aws-athena-query-results-*
+            - Sid: BaseAthenaExamplesPermissions
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:ListBucket
+              Resource:
+                - arn:aws:s3:::athena-examples*
+            - Sid: BaseS3BucketPermissions
+              Effect: Allow
+              Action:
+                - s3:ListBucket
+                - s3:GetBucketLocation
+                - s3:ListAllMyBuckets
+              Resource:
+                - '*'
+            - Sid: BaseSNSPermissions
+              Effect: Allow
+              Action:
+                - sns:ListTopics
+                - sns:GetTopicAttributes
+              Resource:
+                - '*'
+            - Sid: BaseCloudWatchPermissions
+              Effect: Allow
+              Action:
+                - cloudwatch:PutMetricAlarm
+                - cloudwatch:DescribeAlarms
+                - cloudwatch:DeleteAlarms
+                - cloudwatch:GetMetricData
+              Resource:
+                - '*'
+            - Sid: BaseLakeFormationPermissions
+              Effect: Allow
+              Action:
+                - lakeformation:GetDataAccess
+              Resource:
+                - '*'
+            - Sid: BaseDataZonePermissions
+              Effect: Allow
+              Action:
+                - datazone:ListDomains
+                - datazone:ListProjects
+                - datazone:ListAccountEnvironments
+              Resource:
+                - '*'
+            - Sid: BasePricingPermissions
+              Effect: Allow
+              Action:
+                - pricing:GetProducts
+              Resource:
+                - '*'
+            - Effect: Allow
+              Action:
+                - s3:*
+                - s3-object-lambda:*
+              Resource: '*'
+            - Sid: AllowAmazonQFullAccess
+              Effect: Allow
+              Action:
+                - q:StartConversation
+                - q:SendMessage
+                - q:GetConversation
+                - q:ListConversations
+                - q:PassRequest
+                - q:StartTroubleshootingAnalysis
+                - q:GetTroubleshootingResults
+                - q:StartTroubleshootingResolutionExplanation
+                - q:UpdateTroubleshootingCommandResult
+                - q:GetIdentityMetadata
+                - q:CreateAssignment
+                - q:DeleteAssignment
+              Resource: '*'
+            - Sid: AllowCloudControlReadAccess
+              Effect: Allow
+              Action:
+                - cloudformation:GetResource
+                - cloudformation:ListResources
+              Resource: '*'
+            - Sid: AllowSetTrustedIdentity
+              Effect: Allow
+              Action:
+                - sts:SetContext
+              Resource: arn:aws:sts::*:self
+            - Sid: AWSLakeFormationDataAdminAllow
+              Effect: Allow
+              Action:
+                - lakeformation:*
+                - cloudtrail:DescribeTrails
+                - cloudtrail:LookupEvents
+                - glue:GetDatabase
+                - glue:GetDatabases
+                - glue:CreateDatabase
+                - glue:UpdateDatabase
+                - glue:DeleteDatabase
+                - glue:GetConnections
+                - glue:SearchTables
+                - glue:GetTable
+                - glue:CreateTable
+                - glue:UpdateTable
+                - glue:DeleteTable
+                - glue:GetTableVersions
+                - glue:GetPartitions
+                - glue:GetTables
+                - glue:ListWorkflows
+                - glue:BatchGetWorkflows
+                - glue:DeleteWorkflow
+                - glue:GetWorkflowRuns
+                - glue:StartWorkflowRun
+                - glue:GetWorkflow
+                - s3:ListBucket
+                - s3:GetBucketLocation
+                - s3:ListAllMyBuckets
+                - s3:GetBucketAcl
+                - iam:ListUsers
+                - iam:ListRoles
+                - iam:GetRole
+                - iam:GetRolePolicy
+              Resource: '*'
+            - Sid: AWSLakeFormationDataAdminDeny
+              Effect: Deny
+              Action:
+                - lakeformation:PutDataLakeSettings
+              Resource: '*'
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      Events:
+        CloudWatchLogs1:
+          Type: CloudWatchLogs
+          Properties:
+            FilterPattern: ''
+            LogGroupName: LogGroup1
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+  CloudWatchLogs1:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: LogGroup1
